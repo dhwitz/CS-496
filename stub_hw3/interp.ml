@@ -1,3 +1,6 @@
+(* David Horowitz *)
+(* I pledge my honor that I have abided by the stevens honor system. *)
+
 open Ast
 open Ds
 
@@ -70,7 +73,6 @@ let rec eval (en:env) (e:expr):exp_val =
   | CaseT(target,emptycase,id_e,id_lt,id_rt,nodecase) -> 
     let tree1 = treeVal_to_tree (eval en target)
     in match tree1 with
-    
       | Empty -> eval en emptycase
       | Node(ev1, ev2, ev3) -> 
         let en1 = extend_env en id_e ev1

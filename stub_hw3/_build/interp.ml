@@ -1,3 +1,6 @@
+(* David Horowitz *)
+(* I pledge my honor that I have abided by the stevens honor system. *)
+
 open Ast
 open Ds
 
@@ -91,5 +94,3 @@ let parse s =
 (* Interpret an expression *)
 let interp (e:string):exp_val =
   e |> parse |> eval (empty_env ())
-
-

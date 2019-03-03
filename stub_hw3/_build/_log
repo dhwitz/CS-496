@@ -10,7 +10,7 @@ ocamlfind ocamldep -package oUnit -modules ds.ml > ds.ml.depends # cached
 # Target: ds.cmo, tags: { package(oUnit), bin_annot, byte, compile, extension:cmo, extension:ml, file:ds.cmo, file:ds.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -bin-annot -package oUnit -o ds.cmo ds.ml # cached
 # Target: interp.ml.depends, tags: { package(oUnit), bin_annot, extension:ml, file:interp.ml, ocaml, ocamldep, quiet }
-ocamlfind ocamldep -package oUnit -modules interp.ml > interp.ml.depends # cached
+ocamlfind ocamldep -package oUnit -modules interp.ml > interp.ml.depends
 # Target: lexer.mll, tags: { package(oUnit), bin_annot, extension:mll, file:lexer.mll, lexer, ocaml, ocamllex, quiet }
 ocamllex.opt -q lexer.mll # cached
 # Target: lexer.ml.depends, tags: { package(oUnit), bin_annot, extension:ml, file:lexer.ml, ocaml, ocamldep, quiet }
@@ -26,7 +26,7 @@ ocamlfind ocamlc -c -bin-annot -package oUnit -o parser.cmi parser.mli # cached
 # Target: lexer.cmo, tags: { package(oUnit), bin_annot, byte, compile, extension:cmo, extension:ml, file:lexer.cmo, file:lexer.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -bin-annot -package oUnit -o lexer.cmo lexer.ml # cached
 # Target: interp.cmo, tags: { package(oUnit), bin_annot, byte, compile, extension:cmo, extension:ml, file:interp.cmo, file:interp.ml, implem, ocaml, quiet }
-ocamlfind ocamlc -c -bin-annot -package oUnit -o interp.cmo interp.ml # cached
+ocamlfind ocamlc -c -bin-annot -package oUnit -o interp.cmo interp.ml
 # Target: test.cmo, tags: { package(oUnit), bin_annot, byte, compile, extension:cmo, extension:ml, file:test.cmo, file:test.ml, implem, ocaml, quiet }
 ocamlfind ocamlc -c -bin-annot -package oUnit -o test.cmo test.ml
 # Target: parser.ml.depends, tags: { package(oUnit), bin_annot, extension:ml, file:parser.ml, ocaml, ocamldep, quiet }
