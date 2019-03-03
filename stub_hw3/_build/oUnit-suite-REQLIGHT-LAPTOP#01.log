@@ -1,0 +1,18 @@
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: Start test suite:0:abs_0.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: Test suite:0:abs_0 is successful.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: End test suite:0:abs_0.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: Start test suite:4:adds.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: Test suite:4:adds is successful.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: End test suite:4:adds.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: Start test suite:8:let.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: Test suite:8:let is successful.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: End test suite:8:let.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: Start test suite:12:cons_list.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: Test suite:12:cons_list is successful.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: End test suite:12:cons_list.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: Start test suite:15:tl_singleton.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: Test suite:15:tl_singleton is successful.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: End test suite:15:tl_singleton.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: Start test suite:18:null_true.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: Test suite:18:null_true is successful.
+2019-03-01T18:54:04+00:00 REQLIGHT-LAPTOP#01 I: End test suite:18:null_true.
