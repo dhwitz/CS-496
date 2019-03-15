@@ -1,7 +1,16 @@
-(* This file defines expressed values and environments *)
+(* This file defines exprextessed values and environments *)
 
 
 (* expressed values and environments are defined mutually recursively *)
+
+let fst_dec : Ast.dec -> string = function
+  | Ast.Dec(x, y, z) -> x
+
+let snd_dec : Ast.dec -> string = function
+  | Ast.Dec(x, y, z) -> y
+
+let thrd_dec : Ast.dec -> Ast.expr = function
+  | Ast.Dec(x, y, z) -> z
 
 type exp_val =
   | NumVal of int
@@ -25,7 +34,15 @@ let rec apply_env (env:env) (id:string):exp_val option =
     if id=key then
       Some value
     else apply_env saved_env id
-  | ExtendEnvRec (decs, saved_env)    -> failwith "Implement me"
+  | ExtendEnvRec (decs, saved_env)    -> 
+    match decs with
+    | [] -> apply_env saved_env id
+    | x::xs -> 
+      if fst_dec x = id
+      then Some(ProcVal(snd_dec x, thrd_dec x, env))
+      else apply_env (ExtendEnvRec(xs, saved_env)) id
+
+
   (* Old implementation (without mutual recursion) *)
   (* | LetrecEnv (name, var, body, saved_env) ->
    *   if id=name then
@@ -33,6 +50,7 @@ let rec apply_env (env:env) (id:string):exp_val option =
    *   else apply_env saved_env id *)
 
 (* operations on expressed values *)
+
 
 let numVal_to_num =  function
   | NumVal n -> n

@@ -62,8 +62,7 @@ and
   | Let(x, e1, e2)       ->
     let v1 = eval en e1  in
     eval (ExtendEnv (x, v1, en)) e2
-  | Letrec(decs, e) ->
-    failwith "Implement me"
+  | Letrec(decs, e) -> eval (ExtendEnvRec(decs, en)) e
   | Proc(x,e)            -> ProcVal (x,e,en)
   | App(e1,e2)           ->
     let v1 = eval en e1 in
@@ -88,3 +87,5 @@ let parse s =
 (* Interpret an expression *)
 let interp (e:string) : exp_val =
   e |> parse |> eval EmptyEnv
+
+
