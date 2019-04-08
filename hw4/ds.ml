@@ -9,10 +9,10 @@ type exp_val =
   | BoolVal of bool
   | ProcVal of string*Ast.expr*env
   | RefVal of int
-  (* TODO: UnitVal
-   * TODO: PairVal
-   * TODO: ListVal
-   * TODO: TreeVal *)
+  | UnitVal
+  | PairVal of exp_val*exp_val
+  | ListVal of exp_val list
+  | TreeVal of btree 
 and
   env =
   | EmptyEnv
@@ -22,7 +22,6 @@ and
   btree =
   | EmptyNodeVal of Ast.texpr
   | NodeVal of exp_val*btree*btree
-
 
 (* Operations on environments *)
 
@@ -57,23 +56,38 @@ let refVal_to_int =  function
   |  RefVal n -> n
   | _ -> failwith "Expected a reference!"
 
-(* TODO: unitVal_to_unit
- * TODO: pairVal_to_fst
- * TODO: pairVal_to_snd
- * TODO: listVal_to_list
- * TODO: treeVal_to_tree *)
+let unitVal_to_unit = function
+  | UnitVal -> ()
+  | _ -> failwith "Expected a unit!"
+
+let pairVal_to_fst = function
+  | PairVal(exp_val1, _) -> exp_val1
+  | _ -> failwith "Expected a pair!"
+
+let pairVal_to_snd = function
+  | PairVal(_, exp_val2) -> exp_val2
+  | _ -> failwith "Expected a pair!"
+
+let listVal_to_list = function
+  | ListVal n -> n
+  | _ -> failwith "Expected a list!"
+
+let treeVal_to_tree = function
+  | TreeVal n -> n
+  | _ -> failwith "Expected a tree!"
+
 
 let rec string_of_expval = function
   | NumVal n -> "NumVal " ^ string_of_int n
   | BoolVal b -> "BoolVal " ^ string_of_bool b
   | ProcVal (id,body,env) -> "ProcVal ("^id^","^Ast.string_of_expr body^","^ string_of_env env^")"
   | RefVal i -> "RefVal (" ^ string_of_int i ^ ")"
-  (* TODO: new cases for
-   *                    PairVal
-   *                    ListVal
-   *                    TreeVal
-   *                    UnitVal *)
-
+  | UnitVal -> "UnitVal"
+  | PairVal(fst, snd) -> "PairVal ("^string_of_expval fst^","^string_of_expval snd^")"
+  | ListVal l -> "ListVal " ^ string_of_listval l
+  | TreeVal t -> "TreeVal " ^ string_of_btree t
+and
+  string_of_listval e = String.concat ";" (List.map (fun (x) -> "("^string_of_expval x^")") e)
 and
   string_of_env  = function
   | EmptyEnv -> ""

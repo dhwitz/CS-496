@@ -92,12 +92,18 @@ and
     List.fold_left (fun v e -> type_of_expr en e) UnitType es
 
   (* explicit ref *)
-  | NewRef(e) ->
-    failwith "TODO: Implement me!"
+  | NewRef(e) ->  RefType(type_of_expr en e)
   | DeRef(e) ->
-    failwith "TODO: Implement me!"
+    let t1 = type_of_expr en e
+    in (match t1 with
+      | RefType(x) -> x
+      | _ -> failwith "Deref must be used on a refrence type")
   | SetRef(e1,e2) ->
-    failwith "TODO: Implement me!"
+    let t1 = type_of_expr en e1
+    in let t2 = type_of_expr en e2
+    in if t1 = RefType(t2)
+    then UnitType
+    else failwith "The arguments in setref must have the same type"
 
   (* pair *)
   | Pair(e1, e2) ->
