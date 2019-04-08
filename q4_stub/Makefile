@@ -3,16 +3,16 @@
 OCB_FLAGS = -tag bin_annot -use-menhir -use-ocamlfind -pkgs oUnit
 OCB = ocamlbuild $(OCB_FLAGS)
 
-all: interp
+all: byte
 
 clean:
 	$(OCB) -clean
 
-interp:
-	$(OCB) interp.byte
+byte:
+	$(OCB) main.byte
 
 repl: byte
-	./repl.byte
+	./main.byte
 
 utop: byte
 	utop
