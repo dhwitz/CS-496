@@ -1,3 +1,6 @@
+(* David Horowitz 
+  I pledge my honor that I have abided by the Stevens honor system. *)
+
 open Ast
 
 let from_some = function
@@ -106,36 +109,63 @@ and
     else failwith "The arguments in setref must have the same type"
 
   (* pair *)
-  | Pair(e1, e2) ->
-    failwith "TODO: Implement me!"
-  | Unpair(id1, id2, def, body) ->
-    failwith "TODO: Implement me!"
+  | Pair(e1, e2) -> PairType((type_of_expr en e1), (type_of_expr en e2))
+  | Unpair(id1, id2, def, body) -> 
+    (match (type_of_expr en def) with
+      | PairType(x,y) -> 
+        let en1 = extend_tenv id1 x en
+        in let en2 = extend_tenv id2 y en1
+        in type_of_expr en2 body
+      | _ -> failwith "Must unpair on a pair") 
+    
+    
 
   (* list *)
-  | EmptyList(t) ->
-    failwith "TODO: Implement me!"
+  | EmptyList(t) -> ListType(t)
   | Cons(he, te) ->
-    failwith "TODO: Implement me!"
+    let t1 = type_of_expr en he
+    in let t2 = type_of_expr en te
+    in if t2 = ListType(t1)
+        then t2
+        else failwith "List and 1st argument must have matching types"
   | Null(e) ->
-    failwith "TODO: Implement me!"
+    (match (type_of_expr en e) with 
+      | ListType(_) -> BoolType
+      | _ -> failwith "Must use Null on a list")
   | Hd(e) ->
-    failwith "TODO: Implement me!"
+    (match (type_of_expr en e) with 
+      | ListType(a) -> a
+      | _ -> failwith "Must use Hd on a list")
   | Tl(e) ->
-    failwith "TODO: Implement me!"
+    (match (type_of_expr en e) with 
+        | ListType(_) as x -> x
+        | _ -> failwith "Must use Tl on a list")
 
   (* tree *)
-  | EmptyTree(t) ->
-    failwith "TODO: Implement me!"
+  | EmptyTree(t) -> TreeType(t)
   | Node(de, le, re) ->
-    failwith "TODO: Implement me!"
+    let t1 = TreeType(type_of_expr en de)
+    in let t2 = type_of_expr en le
+    in let t3 = type_of_expr en re
+    in if t1 = t2 && t1 = t3 && t2 = t3
+        then t1
+        else failwith "Node and children must all share the same type"
   | NullT(t) ->
-    failwith "TODO: Implement me!"
+    (match (type_of_expr en t) with 
+      | TreeType(_) -> BoolType
+      | _ -> failwith "Must use NullT on a tree")
   | GetData(t) ->
-    failwith "TODO: Implement me!"
+    (match (type_of_expr en t) with 
+      | TreeType(x) -> x
+      | _ -> failwith "Must use GetData on a tree")
   | GetLST(t) ->
-    failwith "TODO: Implement me!"
+    (match (type_of_expr en t) with 
+      | TreeType(_) as x-> x
+      | _ -> failwith "Must use GetLST on a tree")
   | GetRST(t) ->
-    failwith "TODO: Implement me!"
+    (match (type_of_expr en t) with 
+      | TreeType(_) as x-> x
+      | _ -> failwith "Must use GetRST on a tree")
 
 
   | Debug ->
