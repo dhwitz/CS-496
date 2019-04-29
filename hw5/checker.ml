@@ -102,9 +102,7 @@ and
     | RefType tval when tval=t2 -> UnitType
     | _ -> failwith "SetRef: type of LHS and RHS do not match")
   | TypeDecl(id,cs) -> Hashtbl.add tdecls id cs ; UnitType
-  | Variant(tag,args) -> 
-    let seq = Hashtbl.
-    
+  | Variant(tag,args) -> failwith "Implement me!"
   | Case(cond,branches) -> failwith "Implement me!"
   | Debug ->
     print_string "Environment:\n";
