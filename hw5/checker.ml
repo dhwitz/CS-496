@@ -102,19 +102,50 @@ and
     | RefType tval when tval=t2 -> UnitType
     | _ -> failwith "SetRef: type of LHS and RHS do not match")
   | TypeDecl(id,cs) -> Hashtbl.add tdecls id cs ; UnitType
-  | Variant(tag,args) -> failwith "Implement me!"
-  | Case(cond,branches) -> failwith "Implement me!"
+  | Variant(tag,args) -> 
+    let t = find_t tdecls tag
+    in (match t with 
+      | None -> failwith "Could not find the variant in any userdefined cases."
+      | Some(str) ->
+        print_string tag ;
+        let typ_lst = List.find (fun x -> match x with
+                            CDec(vari, lst) -> vari = tag) (Hashtbl.find tdecls str)
+        in match typ_lst with
+          CDec(vari, lst) -> 
+            if compare_variant tdecls en args lst
+            then UserType(str)
+            else failwith "Incorrect args given")
+  | Case(cond,branches) -> 
+    let t1 = type_of_expr tdecls en cond
+    in (match t1 with 
+          | UserType(x) -> failwith "finish me"
+          | _ -> failwith "Case must be preformed on user types")
   | Debug ->
     print_string "Environment:\n";
     print_string @@ string_of_tenv en;
     UnitType
 and
-  find_c : string -> Ast.cdecl list-> bool = fun tag cdec->
-    match cdec with
-      | CDec(str, lst)::xs when str = tag -> true
-      | _ -> false 
-    
-
+  find_t : (string, Ast.cdecl list) Hashtbl.t -> string -> string option = fun tdecls tag ->
+    Hashtbl.fold (fun key value tr -> 
+      let cdec = List.find_opt (fun x -> 
+        (match x with 
+          | CDec(str, _) -> str = tag)) value
+      in match cdec with
+        | None -> None
+        | Some(_) -> Some(key) 
+      ) tdecls None
+and 
+  compare_variant : (string, Ast.cdecl list) Hashtbl.t -> tenv -> Ast.expr list -> Ast.texpr list 
+    -> bool = fun tdecls tenv exp_lst texp_lst ->
+      match (exp_lst, texp_lst) with
+      | ([], []) -> true
+      | ([], _) -> failwith "Too few args given for this variant"
+      | (_, []) -> failwith "Too many args given for this variant"
+      | (exp::xs, texp::ys) -> 
+        let te1 = type_of_expr tdecls tenv exp
+        in if te1 = texp
+            then true && compare_variant tdecls tenv xs ys
+            else failwith "Incorrect args given"
 
 let parse s =
   let lexbuf = Lexing.from_string s in
