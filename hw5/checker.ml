@@ -1,5 +1,8 @@
 open Ast
 
+(* David Horowitz 
+  I pledge my honor that I have abided by the Stevens honor system *)
+
 let from_some = function
   | None -> failwith "from_some: None"
   | Some v -> v
@@ -22,7 +25,14 @@ let rec apply_tenv (tenv:tenv) (id:string):texpr option =
     then Some value
     else apply_tenv tenv1 id
 
+let rec tenv_fold: tenv -> texpr list -> string list -> tenv = fun tenv type_list id_list ->
+    match (type_list, id_list) with
+    | ([], []) -> tenv
+    | ([], _) -> failwith "Too many args given for a branch"
+    | (_, []) -> failwith "Too few args given for a branch"
+    | (txp::xs, str::ys) -> tenv_fold (extend_tenv str txp tenv) xs ys
   
+
 let init_tenv () =
      extend_tenv "x"  IntType 
      @@ extend_tenv "v" IntType
@@ -107,7 +117,6 @@ and
     in (match t with 
       | None -> failwith "Could not find the variant in any userdefined cases."
       | Some(str) ->
-        print_string tag ;
         let typ_lst = List.find (fun x -> match x with
                             CDec(vari, lst) -> vari = tag) (Hashtbl.find tdecls str)
         in match typ_lst with
@@ -118,7 +127,12 @@ and
   | Case(cond,branches) -> 
     let t1 = type_of_expr tdecls en cond
     in (match t1 with 
-          | UserType(x) -> failwith "finish me"
+          | UserType(x) -> 
+            let c_list = Hashtbl.find tdecls x
+            in let type_result_lst = branch_check tdecls en c_list branches
+            in if List.for_all (fun x -> x = (List.hd type_result_lst)) type_result_lst
+               then List.hd type_result_lst
+               else failwith "The types of all branches must be the same"
           | _ -> failwith "Case must be preformed on user types")
   | Debug ->
     print_string "Environment:\n";
@@ -139,13 +153,25 @@ and
     -> bool = fun tdecls tenv exp_lst texp_lst ->
       match (exp_lst, texp_lst) with
       | ([], []) -> true
-      | ([], _) -> failwith "Too few args given for this variant"
-      | (_, []) -> failwith "Too many args given for this variant"
+      | ([], _) -> failwith "Too few args given for a variant"
+      | (_, []) -> failwith "Too many args given for a variant"
       | (exp::xs, texp::ys) -> 
         let te1 = type_of_expr tdecls tenv exp
         in if te1 = texp
             then true && compare_variant tdecls tenv xs ys
             else failwith "Incorrect args given"
+and
+  branch_check : (string, Ast.cdecl list) Hashtbl.t -> tenv -> cdecl list -> branch list 
+      -> texpr list = fun tdecls tenv c_list branches ->
+        match c_list with
+        | [] -> []
+        | CDec(str, type_lst)::xs -> 
+          match List.find_opt (fun x -> match x with | Branch(bstr, _, _) -> bstr = str) branches with
+          | None -> failwith "You must include a branch for each possible case of the user defined type"
+          | Some(Branch(bstr, id_lst, expr)) -> 
+            let tenv1 = tenv_fold tenv type_lst id_lst
+            in type_of_expr tdecls tenv1 expr :: branch_check tdecls tenv xs branches
+
 
 let parse s =
   let lexbuf = Lexing.from_string s in
@@ -156,5 +182,6 @@ let parse s =
 (* Interpret an expression *)
 let chk (e:string) : texpr =
   e |> parse |> type_of_prog 
+
 
 
